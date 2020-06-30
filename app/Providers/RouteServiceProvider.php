@@ -21,7 +21,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public const HOME = '/home';
+    public const HOME = '/manager';
 
     /**
      * Define your route model bindings, pattern filters, etc.
@@ -45,6 +45,8 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapApiRoutes();
 
         $this->mapWebRoutes();
+
+        $this->mapManagerRoutes();
 
         //
     }
@@ -76,5 +78,14 @@ class RouteServiceProvider extends ServiceProvider
              ->middleware('api')
              ->namespace($this->namespace)
              ->group(base_path('routes/api.php'));
+    }
+
+    protected function mapManagerRoutes()
+    {
+        Route::prefix('manager')
+        ->middleware(['web', 'auth'])
+        ->name('manager.')
+        ->namespace('App\Http\Controllers\Manager')
+        ->group(base_path('routes/manager.php'));
     }
 }

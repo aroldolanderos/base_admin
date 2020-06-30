@@ -2,25 +2,24 @@
 
 namespace App\Http\Controllers\Manager;
 
+use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Models\Publication;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Hash;
 
-class PublicationController extends Controller
+class UserController extends Controller
 {
     /**
-     * Display a listing of publications.
+     * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $publications = Publication::orderBy('updated_at', 'DESC')->paginate(4);
+        $users = User::orderBy('updated_at', 'DESC')->paginate(4);
 
-        return view('manager.publications.index', compact('publications'));
+        return view('manager.users.index', compact('users'));
     }
 
     /**
@@ -30,7 +29,7 @@ class PublicationController extends Controller
      */
     public function create()
     {
-        return view('manager.publications.create');
+        return view('manager.users.create');
     }
 
     /**
@@ -42,22 +41,24 @@ class PublicationController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'title' => 'required',
-            'body' => 'required',
+            'name' => 'required',
+            'email' => 'required|email',
+            'password' => 'required',
         ]);
 
         if ($validator->fails()) {
-            return redirect('manager/publications/create')
+            return redirect('manager/users/create')
                         ->withErrors($validator)
                         ->withInput();
         }
 
-        $publication = new Publication();
-        $publication->title = $request->input('title');
-        $publication->body = $request->input('body');
-        $publication->save();
+        $user = new User();
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        $user->password = Hash::make($request->input('password'));
+        $user->save();
 
-        return redirect()->route('manager.publications.index');
+        return redirect()->route('manager.users.index');
     }
 
     /**
@@ -68,9 +69,7 @@ class PublicationController extends Controller
      */
     public function show($id)
     {
-        $publication = Publication::findOrFail($id);
-
-        return view('manager.publications.show', compact('publication'));
+        //
     }
 
     /**
@@ -81,11 +80,7 @@ class PublicationController extends Controller
      */
     public function edit($id)
     {
-        $this->middleware(['permission:edit publications']);
-
-        $publication = Publication::findOrFail($id);
-
-        return view('manager.publications.edit', compact('publication'));
+        return view('manager.users.edit', compact('user'));
     }
 
     /**
@@ -98,22 +93,24 @@ class PublicationController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'title' => 'required',
-            'body' => 'required',
+            'name' => 'required',
+            'email' => 'required|email',
+            'password' => 'required',
         ]);
 
         if ($validator->fails()) {
-            return redirect('manager/publications/create')
+            return redirect('manager/users/create')
                         ->withErrors($validator)
                         ->withInput();
         }
 
-        $publication = Publication::find($id);
-        $publication->title = $request->input('title');
-        $publication->body = $request->input('body');
-        $publication->save();
+        $user = User::find($id);
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        $user->password = Hash::make($request->input('password'));
+        $user->save();
 
-        return redirect()->route('manager.publications.index');
+        return redirect()->route('manager.users.index');
     }
 
     /**
@@ -122,11 +119,8 @@ class PublicationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function delete($id)
+    public function destroy($id)
     {
-        $publication = Publication::find($id);
-        $publication->delete();
-
-        return redirect()->route('manager.publications.index');
+        //
     }
 }
