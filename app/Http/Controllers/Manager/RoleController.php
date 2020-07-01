@@ -66,12 +66,41 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
-        $role = Role::findOrFail($id);
-
-        dd($role->getAllPermissions());
-
+        $role = RoleLaravelPermission::findById($id);
+        $currentPermissionsIds = [];
         $permissions = Permission::all();
+        foreach($role->getAllPermissions() as $roles) {
+            $currentPermissionsIds[] = $roles->id;
+        }
 
-        return view('manager.authorization.roles.edit', compact(['role', 'permissions']));
+        return view('manager.authorization.roles.edit', compact([
+            'role',
+            'currentPermissionsIds',
+            'permissions'
+        ]));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $role = RoleLaravelPermission::findById($id);
+        $permissionIds = $request->input('permisions');
+        $allPermissions = Permission::all();
+
+        $role->revokePermissionTo($allPermissions);
+
+        foreach($allPermissions as $permission) {
+            if (in_array($permission->id, $permissionIds)) {
+                $role->givePermissionTo($permission->name);
+            }
+        }
+
+        return redirect()->route('manager.roles.index');
     }
 }

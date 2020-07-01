@@ -7,10 +7,14 @@
             <form action="{{ route('manager.roles.update', ['id' => $role->id]) }}" method="POST" accept-charset="utf-8">
                 @csrf
                 @method('put')
-                
                 @foreach($permissions as $permission)
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck-{{ $permission->id }}">
+                        <input class="form-check-input"
+                            type="checkbox"
+                            name="permisions[]"
+                            value="{{ $permission->id }}"
+                            id="defaultCheck-{{ $permission->id }}"
+                            @if(in_array($permission->id, $currentPermissionsIds))checked @endif>
                         <label class="form-check-label" for="defaultCheck-{{ $permission->id }}">
                             {{ $permission->name }}
                         </label>
