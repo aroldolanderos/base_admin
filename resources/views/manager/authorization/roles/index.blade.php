@@ -4,6 +4,7 @@
     <h1 class="mt-4 mb-4">Listado de roles</h1>
     <div class="row">
         <div class="col-md-12">
+            <a href="{{ route('manager.roles.create') }}" class="btn btn-primary mb-2">Nuevo rol</a>
             @if(count($roles) > 0)
                 <table class="table table-bordered">
                     <thead class="thead-dark">
@@ -17,11 +18,11 @@
                             <tr>
                                 <td>{{ $role->name }}</td>
                                 <td class="text-center">
-                                    <a href="{{ route('manager.users.edit', [
+                                    <a href="{{ route('manager.roles.edit', [
                                             'id' => $role->id
                                         ]) }}" 
                                         class="btn btn-primary btn-sm mb-2">
-                                        edit
+                                        manager permissions
                                     </a>
                                 </td>
                             </tr>

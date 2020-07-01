@@ -26,7 +26,12 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 // ...
 Route::group(['middleware' => ['role:super-admin']], function () {
     Route::get('permissions', 'PermissionController@index')->name('permissions.index');
+
     Route::get('roles', 'RoleController@index')->name('roles.index');
+    Route::post('roles', 'RoleController@store')->name('roles.store');
+    Route::get('roles/create', 'RoleController@create')->name('roles.create');
+    Route::put('roles/{id}', 'RoleController@update')->name('roles.update');
+    Route::get('roles/{id}/edit', 'RoleController@edit')->name('roles.edit');
 });
 
 
