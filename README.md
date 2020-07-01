@@ -14,7 +14,8 @@ $ php artisan key:generate
 ```
 
 ```
-$ php artisan migrate --seed
+$ composer dump-autoload
+$ php artisan migrate:fresh --seed --seeder=RolesAndPermissionsSeeder
 ```
 
 ```
