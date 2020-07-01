@@ -81,8 +81,6 @@ class PublicationController extends Controller
      */
     public function edit($id)
     {
-        $this->middleware(['permission:edit publications']);
-
         $publication = Publication::findOrFail($id);
 
         return view('manager.publications.edit', compact('publication'));
