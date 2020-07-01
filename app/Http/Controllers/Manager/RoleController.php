@@ -55,7 +55,7 @@ class RoleController extends Controller
 
         // flash messages...
 
-        return redirect()->route('manager.authorization.roles.index');
+        return redirect()->route('manager.roles.index');
     }
 
     /**
